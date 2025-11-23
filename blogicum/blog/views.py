@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.http import Http404
 
 
 posts = [
@@ -45,6 +46,9 @@ posts = [
 ]
 
 
+POSTS_BY_ID = {post['id']: post for post in posts}
+
+
 def index(request):
     template = 'blog/index.html'
     context = {'posts': posts[::-1]}
@@ -53,7 +57,14 @@ def index(request):
 
 def post_detail(request, id):
     template = 'blog/detail.html'
-    context = {'post': posts[id]}
+
+    try:
+        post_id = int(id)
+        post = POSTS_BY_ID[post_id]
+    except (ValueError, KeyError):
+        raise Http404("Пост не найден")
+
+    context = {'post': post}
     return render(request, template, context)
 
 
