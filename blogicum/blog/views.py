@@ -59,9 +59,8 @@ def post_detail(request, id):
     template = 'blog/detail.html'
 
     try:
-        post_id = int(id)
-        post = POSTS_BY_ID[post_id]
-    except (ValueError, KeyError):
+        post = POSTS_BY_ID[id]
+    except KeyError:
         raise Http404("Пост не найден")
 
     context = {'post': post}
